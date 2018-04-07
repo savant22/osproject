@@ -38,4 +38,16 @@ btime[j+1]=temp;
 }
 }
 }
+printf("\n\n");
+for(i=0;i<n;i++)
+{
+printf("Process P%d",process[i]);
+printf(" with priority %d",priority[i]);
+printf("has burst time %d",btime[i]);
+printf("\n");
+}
+printf("\nENTER NUMBER OF PROCESSES TO SEND IN QUEUE 1 =");
+scanf("%d",&a);
+printf("ENTER NUMBER OF PROCESSES TO SEND IN QUEUE 2 =");
+scanf("%d",&b);
 }
