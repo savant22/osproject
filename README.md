@@ -4,19 +4,22 @@
 #include<conio.h>
 int main()
 {
-int n,i,j,a,b,c,x=0,temp=0;
+int n,i,j;
+int a,b,c,x=0,var=0;
+printf("----------------let's start--------------------");
 printf("enter number of process\n");
 scanf("%d",&n);
-int qu1[n],qu2[n],qu3[n],priority[n],process[n],btime[n],atime[n];
+int qu1[n],qu2[n],qu3[n];
+int priority[n],process[n],btime[n],atime[n];
 
 for(i=0;i<n;i++)
 {
-printf("enter process %d= ",i+1,"\n process");
-scanf("%d= ",&process[i]);
-printf("enter burst time for this process");
-scanf("%d= ",&btime[i] );
-printf("enter priority for this process");
-scanf("%d = ",&priority[i]);
+printf("enter process %d= ",i+1,"\n process=");
+scanf("%d",&process[i]);
+printf("enter burst time =");
+scanf("%d ",&btime[i] );
+printf("enter priority =");
+scanf("%d",&priority[i]);
 }
 for(i=0;i<n-1;i++)
 {
@@ -24,30 +27,202 @@ for(j=0;j<(n-i-1);j++)
 {
 if(priority[j]>priority[j+1])
 {
-temp=priority[j];
+var=priority[j];
 priority[j]=priority[j+1];
-priority[j+1]=temp;
+priority[j+1]=var;
 
-temp=process[j];
+var=process[j];
 process[j]=process[j+1];
-process[j+1]=temp;
+process[j+1]=var;
 
-temp=btime[j];
+var=btime[j];
 btime[j]=btime[j+1];
-btime[j+1]=temp;
+btime[j+1]=var;
 }
 }
 }
 printf("\n\n");
+printf("process     priority      burst time\n");
 for(i=0;i<n;i++)
 {
-printf("Process P%d",process[i]);
-printf(" with priority %d",priority[i]);
-printf("has burst time %d",btime[i]);
+printf("P%d",process[i]);
+printf("        %d",priority[i]);
+printf("        %d",btime[i]);
 printf("\n");
 }
 printf("\nENTER NUMBER OF PROCESSES TO SEND IN QUEUE 1 =");
 scanf("%d",&a);
 printf("ENTER NUMBER OF PROCESSES TO SEND IN QUEUE 2 =");
 scanf("%d",&b);
+printf("ENTER NUMBER OF PROCESSES TO SEND IN QUEUE 3 =");
+scanf("%d",&c);
+for(i=0;i<a;i++)
+{
+qu1[x]=priority[i];
+x=x+1;
+}
+printf("\n");
+printf("\n1)--------------------QUEUE 1-----------------------");
+printf("\n\n");
+printf(" _____________________________________________________\n");
+printf("|	QUEUE 1            |        PRIORITY	      |   \n");
+printf("|__________________________|__________________________|\n");
+
+for(i=0;i<a;i++){
+printf("|	  P%d		   ",process[i]);
+printf("|          %d               |\n",priority[i]);
+}
+printf("|__________________________|__________________________|\n\n");
+for(i=a;i<b+a;i++){
+qu2[x]=priority[i];
+x=x+1;
+}
+printf("\n");
+printf("\n2)----------------------QUEUE 2-----------------------");
+printf("\n\n");
+printf(" ____________________________________________________\n");
+printf("|	QUEUE 2            |    PRIORITY	     | \n");
+printf("|__________________________|_________________________|\n");
+for(i=a;i<b+a;i++){
+printf("|	  P%d		   ",process[i]);
+printf("|          %d              |\n",priority[i]);
+}
+printf("|__________________________|_________________________|\n\n");
+for(i=b+a;i<c+b+a;i++){
+qu3[x]=priority[i];
+x=x+1;
+}
+printf("\n");
+printf("\n3)---------------------QUEUE 3---------------------");
+printf("\n\n");
+printf(" ____________________________________________________\n");
+printf("| QUEUE 3	           |       PRIORITY	    | \n");
+printf("|__________________________|________________________|\n");
+for(i=b+a;i<c+a+b;i++){
+printf("|	  P%d		   ",process[i]);
+printf("|          %d             |\n",priority[i]);
+}
+printf("|__________________________|________________________|\n");
+printf("\n");
+while(true)
+{
+int ch;
+printf("\n\npress 1 for round robin\n2 for priority scheduling\n3 for first come first serve\n4 to exit\n");
+scanf("%d",&ch);
+	int tq,t,remain,flag=0;
+float waiting_time=0,turn_time=0;
+int wt[n],tat[n]; 
+float avwtime=0,avtatime=0;
+
+int total=0;
+int wtime[n],ttime[n];
+float avg_wtime,avg_tatime;
+switch(ch)
+{
+
+	case 1:
+
+remain=a;
+printf("\n\n----------ROUND ROBIN SCHEDULING FOR QUEUE 1----------\n\n");
+for(i=0;i<a;i++){
+printf("ENTER ARRIVAL TIME Process%d =",process[i]);
+scanf("%d",&atime[i]);
+rtime[i]=btime[i];
+}
+printf("enter time quantum = ");
+scanf("%d",&tq);
+printf("_______________________________________________");
+printf("\n|Process |  Turnaround time |  Waiting time    |\n");
+printf("|________|__________________|__________________|\n");
+for(t=0,i=0;remain!=0;)
+{
+if(rtime[i]<=tq && rtime[i]>0)
+{
+t=t+rtime[i];
+rtime[i]=0;
+flag=1;
+}
+else if(rtime[i]>0)
+{
+rtime[i]=rtime[i]-tq;
+t=t+tq;
+}
+if(rtime[i]==0 && flag==1)
+{
+remain--;
+printf("|P%d      |         %d        |       %d          | \n",i+1,t-atime[i],t-atime[i]-btime[i]);
+printf("|________|__________________|__________________|\n");
+waiting_time=waiting_time+t-atime[i]-btime[i];
+turn_time=turn_time+t-atime[i];
+flag=0;
+}
+if(i==a-1)
+i=0;
+else if(atime[i+1]<=t)
+i++;
+else
+i=0;
+}
+printf("\nAverage waiting time= %f\n",waiting_time/a);
+printf("Average turnaround time= %f\n",turn_time/a);
+break;
+
+case 2:
+printf("\n\n\n----------PRIORITY QUEUE SCHEDULING FOR QUEUE 2----------\n\n");
+
+wtime[a]=0;
+for(i=a+1;i<b+a;i++){
+wtime[i]=0;
+for(j=a;j<i;j++)
+wtime[i]=wtime[i]+btime[j];
+total=total+wtime[i];
+}
+avg_wtime=total*1.0/b;
+total=0;
+printf("_______________________________________________");
+printf("\n|Process |  Turnaround time |  Waiting time    |\n");
+printf("|________|__________________|__________________|\n");
+for(i=a;i<b+a;i++)
+{
+ttime[i]=btime[i]+wtime[i];
+total=total+ttime[i];
+printf("|P%d      |         %d        |       %d          | \n",i+1,btime[i],wtime[i],ttime[i]);
+printf("|________|__________________|__________________|\n");
+}
+avg_tatime=total/b;
+printf("\nAverage waiting time= %f\n",avg_wtime);
+printf("Average turnaround time= %f\n",avg_tatime);
+break;
+
+case 3:
+printf("\n\n\n----------FIRST COME FIRST SERVE (FCFS) SCHEDULING FOR QUEUE 3----------\n\n");
+
+wt[b+a]=0;
+for(i=b+a+1;i<c+a+b;i++)
+{
+wt[i]=0;
+for(j=b+a;j<i;j++)
+wt[i]=wt[i]+btime[j];
+}
+printf("_______________________________________________");
+printf("\n|Process |  Turnaround time |  Waiting time    |\n");
+printf("|________|__________________|__________________|\n");
+for(i=b+a;i<b+a+c;i++)
+{
+tat[i]=btime[i]+wt[i];
+avwtime=avwtime+wt[i];
+avtatime=avtatime+tat[i];
+printf("|P%d      |         %d        |       %d          | \n",i+1,btime[i],wt[i],tat[i]);
+printf("|________|__________________|__________________|\n");
+}
+
+printf("\nAverage waiting time= %f\n",avwtime/c);
+printf("Average turnaround time= %f\n",avtatime/c);
+break;
+
+case 4:exit(0);
+}
+}
+}
+
 }
